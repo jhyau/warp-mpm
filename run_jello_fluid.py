@@ -26,9 +26,8 @@ mpm_solver.load_initial_data_from_torch(position_tensor, volume_tensor)
 
 material_params = {
     'bulk_modulus': 2000.0,
-    "material": "fluid",
+    "material": "jelly",
     'friction_angle': 35,
-    #'g': [0.0, 0.0, -4.0],
     'g': [0.0, 0.0, -10.0],
     "density": 1000.0
 }
@@ -42,13 +41,13 @@ mpm_solver.add_surface_collider((0.5+box_length/2., 0.0, 0.0), (-1.0,0.0,0.0), '
 mpm_solver.add_surface_collider((0.0, 0.5+box_length/2., 0.0), (0.0,-1.0,0.0), 'cut', 0.0)
 mpm_solver.add_surface_collider((0.0, 0.5-box_length/2., 0.0), (0.0,1.0,0.0), 'cut', 0.0)
 
-directory_to_save = './sim_results/fluid_g_10'
+directory_to_save = './sim_results/jelly_fluid_g_10'
 
-save_data_at_frame(mpm_solver, directory_to_save, 0, save_to_ply=True, save_to_h5=False)
+save_data_at_frame(mpm_solver, directory_to_save, 0, save_to_ply=True, save_to_h5=True)
 
 for k in range(1,50):
     mpm_solver.p2g2p(k, 0.002, device=dvc)
-    save_data_at_frame(mpm_solver, directory_to_save, k, save_to_ply=True, save_to_h5=False)
+    save_data_at_frame(mpm_solver, directory_to_save, k, save_to_ply=True, save_to_h5=True)
 
 
 
@@ -61,4 +60,4 @@ mpm_solver.import_particle_x_from_torch(position)
 for k in range(50,100):
  
     mpm_solver.p2g2p(k, 0.002, device=dvc)
-    save_data_at_frame(mpm_solver, directory_to_save, k, save_to_ply=True, save_to_h5=False)
+    save_data_at_frame(mpm_solver, directory_to_save, k, save_to_ply=True, save_to_h5=True)
