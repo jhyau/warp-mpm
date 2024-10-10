@@ -33,6 +33,15 @@ def save_data_at_frame(mpm_solver, dir_name, frame, save_to_ply = True, save_to_
 
         C_np = mpm_solver.mpm_state.particle_C.numpy().reshape(-1,9).transpose() # shape = (9, n_particles)
         newFile.create_dataset("C", data=C_np) # particle C
+
+        particle_volume = np.expand_dims(mpm_solver.mpm_state.particle_vol.numpy(), 0) # shape = (1, n_particles)
+        newFile.create_dataset("particle_volume", data=particle_volume) # particle volume
+
+        particle_mass = np.expand_dims(mpm_solver.mpm_state.particle_mass.numpy(), 0) # shape = (1, n_particles)
+        newFile.create_dataset("masses", data=particle_mass) # particle mass
+
+        particle_density = np.expand_dims(mpm_solver.mpm_state.particle_density.numpy(), 0) # shape = (1, n_particles)
+        newFile.create_dataset("particle_density", data=particle_density) # particle density
         print("save siumlation data at frame ", frame, " to ", fullfilename)
 
 def particle_position_to_ply(mpm_solver, filename):
