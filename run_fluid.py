@@ -42,23 +42,23 @@ mpm_solver.add_surface_collider((0.5+box_length/2., 0.0, 0.0), (-1.0,0.0,0.0), '
 mpm_solver.add_surface_collider((0.0, 0.5+box_length/2., 0.0), (0.0,-1.0,0.0), 'cut', 0.0)
 mpm_solver.add_surface_collider((0.0, 0.5-box_length/2., 0.0), (0.0,1.0,0.0), 'cut', 0.0)
 
-directory_to_save = './sim_results/fluid_g_10'
+directory_to_save = './sim_results/fluid_g_10_no_x_shift'
 
 save_data_at_frame(mpm_solver, directory_to_save, 0, save_to_ply=True, save_to_h5=False)
 
-for k in range(1,50):
+for k in range(1,100):
     mpm_solver.p2g2p(k, 0.002, device=dvc)
     save_data_at_frame(mpm_solver, directory_to_save, k, save_to_ply=True, save_to_h5=False)
 
 
 
 # extract the position, make some changes, load it back
-position = mpm_solver.export_particle_x_to_torch()
+#position = mpm_solver.export_particle_x_to_torch()
 # e.g. we shift the x position
-position[:,0] = position[:,0] + 0.1
-mpm_solver.import_particle_x_from_torch(position)
+#position[:,0] = position[:,0] + 0.1
+#mpm_solver.import_particle_x_from_torch(position)
 # keep running sim
-for k in range(50,100):
+#for k in range(50,100):
  
-    mpm_solver.p2g2p(k, 0.002, device=dvc)
-    save_data_at_frame(mpm_solver, directory_to_save, k, save_to_ply=True, save_to_h5=False)
+#    mpm_solver.p2g2p(k, 0.002, device=dvc)
+#    save_data_at_frame(mpm_solver, directory_to_save, k, save_to_ply=True, save_to_h5=False)
