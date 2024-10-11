@@ -31,6 +31,8 @@ position_tensor = mpm_solver.export_particle_x_to_torch()
 # np vector of x # shape now is (n_particles, dim)
 print("position tensor size: ", position_tensor.size())
 print("current location: ", position_tensor[0, :])
+# permute z and y so cylinder is on its side instead
+position_tensor = position_tensor.index_select(1, torch.tensor([0,2,1], device=dvc))
 position_tensor[:,2] = position_tensor[:,2] + 10.0
 print("new location: ", position_tensor[0, :])
 #mpm_solver.import_particle_x_from_torch(position)
@@ -46,11 +48,13 @@ material_params = {
     #"yield_stress": 100.0,
     #"plastic_viscosity": 100.0,
     "material": "jelly",
-    "E": 1e5,
-    "nu": 0.3,
-    #'friction_angle': 35,
-    'g': [0.0, 0.0, -1.0],
-    "density": 1000.0
+    #"E": 1e5,
+    "E": 1.5e3,
+    #"nu": 0.3,
+    "nu": 0.4,
+    'friction_angle': 35,
+    'g': [0.0, 0.0, -4.0],
+    "density": 400.0
 }
 mpm_solver.set_parameters_dict(material_params)
 
@@ -69,7 +73,7 @@ save_data_at_frame(mpm_solver, directory_to_save, 0, save_to_ply=True, save_to_h
 
 num_frames = args.time_steps
 #for k in range(1,50):
-for k in range(1, num_frames):
+for k in range(1, int(num_frames)):
     mpm_solver.p2g2p(k, 0.002, device=dvc)
     save_data_at_frame(mpm_solver, directory_to_save, k, save_to_ply=True, save_to_h5=True)
 
@@ -78,13 +82,15 @@ for k in range(1, num_frames):
 #mpm_solver.load_from_sampling(f"{directory_to_save}/sim_0000000099.h5", n_grid = 150, device=dvc)
 
 # Try reducing gravity
-#material_params2 = {
+material_params2 = {
     #'bulk_modulus': 2000.0,
-#    "material": "jelly",
+    "material": "jelly",
+    "E": 1e5,
+    "nu": 0.3,
     #'friction_angle': 35,
-#    'g': [0.0, 0.0, 0.0]
-    #"density": 1000.0
-#}
+    'g': [0.0, 0.0, 0.0],
+    "density": 1000.0
+}
 #mpm_solver.set_parameters_dict(material_params2)
 
 # add bounding box for fluid
@@ -97,7 +103,7 @@ for k in range(1, num_frames):
 
 #save_data_at_frame(mpm_solver, directory_to_save, 100, save_to_ply=True, save_to_h5=True)
 
-#for i in range(100, 200):
+#for i in range(int(num_frames/2), num_frames):
 #    mpm_solver.p2g2p(i, 0.002, device=dvc)
 #    save_data_at_frame(mpm_solver, directory_to_save, i, save_to_ply=True, save_to_h5=True)
 
